@@ -1,7 +1,7 @@
 function get(req, res) {
 
     res.status(200);
-    res.send('this is shown using express and defaultCtrl')
+    res.send('This server is built using Express and \n It is based on the principles of Representational State Transfer(REST) API')
 
 }
 
