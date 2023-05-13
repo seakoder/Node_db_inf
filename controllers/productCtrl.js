@@ -1,12 +1,12 @@
 
 
-const products = [{ id: 1, brand: 'Apple', price: 200 },
+const products = [{ id: 1, brand: 'Apple', price: 200, availability: 'National', production: "Discontinued" },
 { id: 2, brand: 'Samsung', price: 600 },
-{ id: 3, brand: 'Nokia',price: 400, image: 'https://images.indianexpress.com/2022/09/VivoV25Pro_LEAD.jpg' },
-{ id: 1, brand: 'Lenovo', price: 80 },
-{ id: 2, brand: 'HTC', price: 1500 },
-{ id: 1, brand: 'Dell', price: 2200 },
-{ id: 2, brand: 'Sony', price: 5300 },];
+{ id: 3, brand: 'Nokia',price: 400, image: 'https://images.indianexpress.com/2022/09/VivoV25Pro_LEAD.jpg',availability: 'International', production: "Ongoing" },
+{ id: 4, brand: 'Lenovo', price: 80,availability: 'National', production: "Discontinued" },
+{ id: 5, brand: 'HTC', price: 1500,availability: 'International', production: "Ongoing" },
+{ id: 6, brand: 'Dell', price: 2200, availability: 'National', production: "Discontinued" },
+{ id: 7, brand: 'Sony', price: 5300 ,availability: 'International', production: "Ongoing"},];
 
 function get(req, res) {
 
