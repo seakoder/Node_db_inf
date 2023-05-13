@@ -1,8 +1,12 @@
 
 
 const products = [{ id: 1, brand: 'Apple', price: 200 },
-{ id: 2, brand: 'Samsung', price: 500 },
-{ id: 3, brand: 'Nokia', image: 'https://images.indianexpress.com/2022/09/VivoV25Pro_LEAD.jpg' }];
+{ id: 2, brand: 'Samsung', price: 600 },
+{ id: 3, brand: 'Nokia',price: 400, image: 'https://images.indianexpress.com/2022/09/VivoV25Pro_LEAD.jpg' },
+{ id: 1, brand: 'Lenovo', price: 80 },
+{ id: 2, brand: 'HTC', price: 1500 },
+{ id: 1, brand: 'Dell', price: 2200 },
+{ id: 2, brand: 'Sony', price: 5300 },];
 
 function get(req, res) {
 
