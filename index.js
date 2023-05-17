@@ -7,8 +7,23 @@ const mongoose = require('mongoose');
 
 // const fileSystem = require('fs');
 
-const connectionStr= 'mongodb://127.0.0.1:27017/newbase';
-mongoose.connect(connectionStr);
+// const connectionStr= 'mongodb://127.0.0.1:27017/newbase';
+// mongoose.connect(connectionStr);
+
+
+const dbUrl= 'mongodb+srv://test-user:test-user@cluster0.qjporll.mongodb.net/newbase?retryWrites=true&w=majority';
+
+mongoose.connect(dbUrl);
+
+
+// const connectionParams = {
+//     useNewUrlParser: true,
+//     useUnifiedTopology:true,
+// }
+// mongoose.connect(dbUrl, connectionParams).then(()=>{
+//     console.log('connected via mongo Atlas')
+// }).catch((err) => console.log('Not working'));
+
 
 const PORT = process.env.PORT || 3002;
 // a.use('/', x.static('images'));

@@ -1,27 +1,38 @@
 
 const productRepo = require('../repositories/productRepo')
-const get = async (req,res)=>{
+const get = async (req, res) => {
     try {
-        const data = await productRepo.get();
+        let page = +req.params.page || 1;
+        let limit = +req.params.limit || 10;
+        const data = await productRepo.get(page, limit);
+        const count = await productRepo.getCount();
+        const totalPages = Math.ceil(count / limit);
+        const response = {
+            metadata: {
+                pages: totalPages,
+                count
+            },
+            data
+        }
         res.status(200);
-        res.json(data); 
+        res.json(response);
 
-    }catch(err){
+    } catch (err) {
         console.log(err);
-        res.status(500).json({message:"Internal server error"});
+        res.status(500).json({ message: "Internal server error" });
     }
 
 }
 
-const post = async (req,res) =>{
-try {
-    await productRepo.add(req.body);
-    res.status(200).json({message:'Created'});
+const post = async (req, res) => {
+    try {
+        await productRepo.add(req.body);
+        res.status(200).json({ message: 'Created' });
 
-} catch (error) {
-    res.status(500).json({message:'Internal Server Error'})
+    } catch (error) {
+        res.status(500).json({ message: 'Internal Server Error' })
 
-}
+    }
 
 }
 
@@ -30,7 +41,7 @@ const getById = async (req, res) => {
         const id = req.params.id;
         const product = await productRepo.getById(id);
 
-        if(product) {
+        if (product) {
 
             res.status(200);
             res.json(product);
@@ -46,10 +57,23 @@ const getById = async (req, res) => {
     }
 };
 
-const remove = async (req,res)=>{
-const id = req.params.id;
- await productRepo.remove(id);
- res.status(200).send('Not Found');
+const remove = async (req, res) => {
+    const id = req.params.id;
+    await productRepo.remove(id);
+    res.status(200).send('Not Found');
 }
 
-module.exports={get,post,getById,remove}
+const update = async (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+    await productRepo.update(id, data)
+    res.status(204).send();
+}
+
+const patch = async (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+    await productRepo.patch(id, data);
+    res.send(204).send();
+}
+module.exports = { get, post, getById, remove, update, patch }
