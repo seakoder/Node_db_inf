@@ -1,19 +1,14 @@
-function get(req, res) {
+function get(req,res){
+    res.status(200).send('You are here via express');
+}
 
-    res.status(200);
-    res.send('This server is built using Express and It is based on the principles of Representational State Transfer(REST) API')
+function health(req,res){
+    res.status(200).send({status:'Up'});
 
 }
 
-function health(req, res){
-res.status(200);
-res.send({status:'up'});
+function notFound(req,res){
+    res.send('Does not exist')
 }
 
-
-function notFound(req, res) {
-    res.send('Not found')
-    res.status(404);
-}
-
-module.exports = { get, notFound, health };
+module.exports = {get, health,notFound};

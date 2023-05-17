@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const defaultCtrl = require('../controllers/defaultCtrl');
-
+const defaultCtrl = require('../controllers/defaultCtrl')
 
 router.get('/', defaultCtrl.get);
+router.get('/health', defaultCtrl.health)
 
-router.get('/health', defaultCtrl.health);
-
-module.exports = router;
+module.exports= router;
