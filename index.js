@@ -4,17 +4,17 @@ const productRouter = require('./Routes/productRouter');
 const defaultCtrl = require('./controllers/defaultCtrl')
 const a = x();
 const mongoose = require('mongoose');
+const userRouter = require('./Routes/userRouter')
 
 // const fileSystem = require('fs');
 
-// const connectionStr= 'mongodb://127.0.0.1:27017/newbase';
-// mongoose.connect(connectionStr);
+const connectionStr= 'mongodb://127.0.0.1:27017/newbase';
+mongoose.connect(connectionStr);
 
 
-const dbUrl= 'mongodb+srv://test-user:test-user@cluster0.qjporll.mongodb.net/newbase?retryWrites=true&w=majority';
+// const dbUrl= 'mongodb+srv://test-user:test-user@cluster0.qjporll.mongodb.net/newbase?retryWrites=true&w=majority';
 
-mongoose.connect(dbUrl);
-
+// mongoose.connect(dbUrl);
 
 // const connectionParams = {
 //     useNewUrlParser: true,
@@ -34,8 +34,7 @@ a.use('/', defaultRouter);
 a.use('/api/products', productRouter)
 a.use('/health', defaultRouter);
 a.get('*', defaultCtrl.notFound);
-
-
+a.use('/api/users', userRouter)
 
 
 // a.use('/ejs', (req, res) => res.render('index.ejs'));
@@ -44,3 +43,5 @@ a.get('*', defaultCtrl.notFound);
 //     res.write(content);
 //     res.end()
 // });
+
+

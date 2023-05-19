@@ -1,12 +1,52 @@
 const Product = require('../models/productModel');
 
-const get = (page, limit) => {
-    const pagesToSkip = (page-1) * limit;
-    return Product.find({}, { __v: 0 }).limit(limit).skip(pagesToSkip);
+function getSortField(sort){
+    switch(sort.toLowerCase()){
+        case 'brand':
+        case 'model':
+        case 'price':
+        case 'createdDate':
+        case 'updatedDate':
+        case 'discount':
+            return sort.toLowerCase();
+            default:
+                return 'updatedDate';
+    }
+}
+function getSortDirection(direction){
+    switch(direction.toLowerCase()){
+        case 'asc':
+            return 1;
+        case 'desc':
+        return -1;
+        default:
+            return 1;
+    }
 }
 
-const getCount = () => {
-    return Product.count();
+const get = (page, limit, sort,direction, search) => {
+
+    const searchingFilter = {
+        $or: [
+            { brand: new RegExp(search, 'i') },
+            { model: new RegExp(search, 'i') }
+        ]
+    };
+
+    let sortingFilter = getSortField(sort);
+    let dir = getSortDirection(direction);
+    const pagesToSkip = (page-1) * limit;
+    return Product.find(searchingFilter, { __v: 0 }).sort({[sortingFilter] : dir}).limit(limit).skip(pagesToSkip);
+}
+
+const getCount = (search) => {
+    const searchingFilter = {
+        $or: [
+            { brand: new RegExp(search, 'i') },
+            { model: new RegExp(search, 'i') }
+        ]
+    };
+    return Product.count(searchingFilter);
 }
 const add = (data) => {
     const product = new Product(data);

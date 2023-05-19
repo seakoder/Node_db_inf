@@ -1,11 +1,17 @@
 
 const productRepo = require('../repositories/productRepo')
+const reviewRepo = require('../repositories/reviewRepo')
+
 const get = async (req, res) => {
     try {
         let page = +req.params.page || 1;
         let limit = +req.params.limit || 10;
-        const data = await productRepo.get(page, limit);
-        const count = await productRepo.getCount();
+        let sort = req.query.sort || 'updatedDate';
+        let direction = req.query.direction || 'desc';
+        let search = req.query.search;
+
+        const data = await productRepo.get(page, limit, sort, direction, search);
+        const count = await productRepo.getCount(search);
         const totalPages = Math.ceil(count / limit);
         const response = {
             metadata: {
@@ -26,25 +32,32 @@ const get = async (req, res) => {
 
 const post = async (req, res) => {
     try {
+
+        req.body.createdDate = new Date();
         await productRepo.add(req.body);
         res.status(200).json({ message: 'Created' });
 
     } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error' })
+        console.log(error);
+        if (error.message.indexOf('product validation failed') > -1) {
+            res.status(400).json({ message: 'Bad Request' });
+        } else {
+            res.status(500).json({ message: 'Internal Server Error' })
+
+        }
 
     }
-
 }
-
 const getById = async (req, res) => {
     try {
         const id = req.params.id;
         const product = await productRepo.getById(id);
 
         if (product) {
-
+            const reviews = await reviewRepo.get(id);
+            const Response = { ...product._doc, reviews }
             res.status(200);
-            res.json(product);
+            res.json(Response);
         } else {
             res.status(404);
             res.json({ message: 'Not found' });
