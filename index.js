@@ -8,6 +8,8 @@ const userRouter = require('./Routes/userRouter');
 const jwt = require('jsonwebtoken');
 const authUtils = require('./Utils/authUtils');
 const morgan = require('morgan');
+// const dotenv = require("dotenv");
+// dotenv.config();
 
 const fileSystem = require('fs');
 
@@ -15,14 +17,15 @@ const fileSystem = require('fs');
 if (!fileSystem.existsSync('logs')) {
     fileSystem.mkdirSync('logs');
 }
-
 const logFile = fileSystem.createWriteStream('../Node/logs/first.log', { flags: 'a' })
 
 a.use(morgan('combined', { stream: logFile }));
 a.use(morgan('dev'));
 
-const connectionStr = 'mongodb://127.0.0.1:27017/newbase';
-mongoose.connect(connectionStr);
+// const connectionStr = ;
+
+// System Restart is required after setting Environment variables in windows
+mongoose.connect(process.env.dbUrl)
 
 a.use(x.static('uploads/'))
 
