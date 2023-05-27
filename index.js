@@ -49,8 +49,9 @@ a.listen(PORT, () => console.log('this is dummy text'));
 a.use(x.json());
 a.use('/', defaultRouter);
 
-a.use(authUtils.authenticate);
 a.use('/api/users', userRouter)
+
+a.use(authUtils.authenticate);
 a.use('/health', defaultRouter);
 a.use('/api/products', productRouter)
 a.get('*', defaultCtrl.notFound);
