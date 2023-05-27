@@ -17,7 +17,7 @@ const fileSystem = require('fs');
 if (!fileSystem.existsSync('logs')) {
     fileSystem.mkdirSync('logs');
 }
-const logFile = fileSystem.createWriteStream('/logs/first.log', { flags: 'a' })
+const logFile = fileSystem.createWriteStream('./logs/first.log', { flags: 'a' })
 
 a.use(morgan('combined', { stream: logFile }));
 a.use(morgan('dev'));
@@ -49,7 +49,7 @@ a.listen(PORT, () => console.log('this is dummy text'));
 a.use(x.json());
 a.use('/', defaultRouter);
 
-// a.use(authUtils.authenticate);
+a.use(authUtils.authenticate);
 a.use('/api/users', userRouter)
 a.use('/health', defaultRouter);
 a.use('/api/products', productRouter)
