@@ -17,7 +17,7 @@ const fileSystem = require('fs');
 if (!fileSystem.existsSync('logs')) {
     fileSystem.mkdirSync('logs');
 }
-const logFile = fileSystem.createWriteStream('../Node/logs/first.log', { flags: 'a' })
+const logFile = fileSystem.createWriteStream('/logs/first.log', { flags: 'a' })
 
 a.use(morgan('combined', { stream: logFile }));
 a.use(morgan('dev'));
