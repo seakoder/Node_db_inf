@@ -1,9 +1,10 @@
 
 const productRepo = require('../repositories/productRepo')
 const reviewRepo = require('../repositories/reviewRepo')
-
+const logger = require('../Utils/logger')
 const get = async (req, res) => {
     try {
+        logger.info('making a req')
         let page = +req.params.page || 1;
         let limit = +req.params.limit || 10;
         let sort = req.query.sort || 'updatedDate';
@@ -11,14 +12,21 @@ const get = async (req, res) => {
         let search = req.query.search;
 
         const data = await productRepo.get(page, limit, sort, direction, search);
+        const transforData = data.map(element =>{
+            return {
+                ...element._doc, image: `${req.protocol}://${req.get('host')}/${element._doc.image}`
+            }
+        })
+        logger.info('fetching')
         const count = await productRepo.getCount(search);
         const totalPages = Math.ceil(count / limit);
+        logger.info('pre response')
         const response = {
             metadata: {
                 pages: totalPages,
                 count
             },
-            data
+            data: transforData
         }
         res.status(200);
         res.json(response);
@@ -52,10 +60,18 @@ const getById = async (req, res) => {
     try {
         const id = req.params.id;
         const product = await productRepo.getById(id);
-
+        product.image = product.image ? `${req.protocol}://${req.get('host')}/${product.image}` : undefined;
         if (product) {
             const reviews = await reviewRepo.get(id);
-            const Response = { ...product._doc, reviews }
+            const avgRatingRes = await reviewRepo.getAvgRating(id);
+            const avgRating = (avgRatingRes && avgRatingRes.length > 0)
+                ? avgRatingRes[0].avgRating
+                : undefined;
+            const Response = {
+                ...product._doc,
+                avgRating,
+                reviews,
+            };
             res.status(200);
             res.json(Response);
         } else {
@@ -73,7 +89,7 @@ const getById = async (req, res) => {
 const remove = async (req, res) => {
     const id = req.params.id;
     await productRepo.remove(id);
-    res.status(200).send('Not Found');
+    res.status(200).send('Deleted');
 }
 
 const update = async (req, res) => {

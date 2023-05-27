@@ -1,16 +1,30 @@
 const x = require('express');
- const defaultRouter = require('./Routes/defaultRouter')
+const defaultRouter = require('./Routes/defaultRouter')
 const productRouter = require('./Routes/productRouter');
 const defaultCtrl = require('./controllers/defaultCtrl')
 const a = x();
 const mongoose = require('mongoose');
-const userRouter = require('./Routes/userRouter')
+const userRouter = require('./Routes/userRouter');
+const jwt = require('jsonwebtoken');
+const authUtils = require('./Utils/authUtils');
+const morgan = require('morgan');
 
-// const fileSystem = require('fs');
+const fileSystem = require('fs');
 
-const connectionStr= 'mongodb://127.0.0.1:27017/newbase';
+// If the logs is deleted- create a logs directory/folder by default
+if (!fileSystem.existsSync('logs')) {
+    fileSystem.mkdirSync('logs');
+}
+
+const logFile = fileSystem.createWriteStream('../Node/logs/first.log', { flags: 'a' })
+
+a.use(morgan('combined', { stream: logFile }));
+a.use(morgan('dev'));
+
+const connectionStr = 'mongodb://127.0.0.1:27017/newbase';
 mongoose.connect(connectionStr);
 
+a.use(x.static('uploads/'))
 
 // const dbUrl= 'mongodb+srv://test-user:test-user@cluster0.qjporll.mongodb.net/newbase?retryWrites=true&w=majority';
 
@@ -31,10 +45,12 @@ const PORT = process.env.PORT || 3002;
 a.listen(PORT, () => console.log('this is dummy text'));
 a.use(x.json());
 a.use('/', defaultRouter);
-a.use('/api/products', productRouter)
-a.use('/health', defaultRouter);
-a.get('*', defaultCtrl.notFound);
+
+// a.use(authUtils.authenticate);
 a.use('/api/users', userRouter)
+a.use('/health', defaultRouter);
+a.use('/api/products', productRouter)
+a.get('*', defaultCtrl.notFound);
 
 
 // a.use('/ejs', (req, res) => res.render('index.ejs'));
@@ -45,3 +61,14 @@ a.use('/api/users', userRouter)
 // });
 
 
+
+// db.cities.aggregate(
+//     {$match:{state: 'MA'}},
+//     {$group: {_id: '$state', totalpop:{$sum: '$pop'}}}
+//     )
+
+//     db.cities.aggregate(
+//         {$group:{_id: '$state', totalpop: '$pop'}},
+//         {$sort: {totalpop:-1}},
+//         {$limit:7}
+//     )
